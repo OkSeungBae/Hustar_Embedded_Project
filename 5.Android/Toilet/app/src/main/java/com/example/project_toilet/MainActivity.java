@@ -33,6 +33,9 @@ public class MainActivity extends AppCompatActivity {
     TextView send_textView;
     TextView read_textView;
     private Socket client;
+    private DataOutputStream dataOutput;
+    private DataInputStream dataInput;
+    private String SERVER_IP = "192.168.0.3";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,20 +46,30 @@ public class MainActivity extends AppCompatActivity {
         send_textView = findViewById(R.id.send_textView);
         read_textView = findViewById(R.id.read_textView);
 
-
-        Log.d("send","go send!!!");
-        Connect connect = new Connect();
-        connect.execute();
+        send_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Connect connect = new Connect();
+                connect.execute("refresh");
+            }
+        });
     }
 
-    private class Connect extends AsyncTask<Void ,String ,Void > {
-        private String SERVER_IP = "10.1.4.111";
-        private DataInputStream dataInput;
-        private String inputMessage;
+    private class Connect extends AsyncTask< String , Integer,Void > {
+        private String output_message;
+        private int input_message;
+
         @Override
-        protected Void doInBackground(Void... voids) {
+        protected Void doInBackground(String... strings) {
             try {
                 client = new Socket(SERVER_IP, 8080);
+                dataOutput = new DataOutputStream(client.getOutputStream());
+                dataInput = new DataInputStream(client.getInputStream());
+
+                output_message = strings[0];
+                dataOutput.writeUTF(output_message);
+                input_message  = (int)dataInput.read();
+
                 Log.w("cnt","connect");
             } catch (UnknownHostException e) {
                 String str = e.getMessage().toString();
@@ -65,85 +78,14 @@ public class MainActivity extends AppCompatActivity {
                 String str = e.getMessage().toString();
                 Log.w("discnt", str + " 2");
             }
-
-            /*
-            boolean isStop;
-            try {
-                while (true) {
-                    dataInput = new DataInputStream(client.getInputStream());
-                    inputMessage = dataInput.readUTF();
-                    publishProgress(inputMessage);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            */
-            return null;
-        }
-        @Override
-        protected void onPostExecute(Void result) {
-            send_button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    String text = send_editText.getText().toString();
-                    Sender sender = new Sender();
-                    sender.execute(text);
-                }
-            });
-            if(client != null){
-                Receiver receiver = new Receiver();
-                receiver.execute();
-            }
-
-
-        }
-    }
-
-    private class Sender extends AsyncTask<String, String, Void> {
-        private String message;
-        private DataOutputStream dataOutput;
-        @Override
-        protected Void doInBackground(String... strings) {
-            try {
-                message = strings[0];
-                dataOutput = new DataOutputStream(client.getOutputStream());
-                dataOutput.writeUTF(message);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
             return null;
         }
         @Override
         protected void onPostExecute(Void result) {
             send_textView.setText(""); // Clear the chat box
-            send_textView.append("보낸 메세지: " + message + "\n");
-        }
-    }
-
-
-    private class Receiver extends AsyncTask<Void, Void, Void> {
-
-        private String message;
-        private DataInputStream dataInput;
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            try {
-                dataInput = new DataInputStream(client.getInputStream());
-                message = dataInput.readUTF();
-                if(! message.isEmpty()){
-                    publishProgress(null);
-                }
-            }catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-        @Override
-        protected void onProgressUpdate(Void... values) {
+            send_textView.append("보낸 메세지: " + output_message );
             read_textView.setText(""); // Clear the chat box
-            read_textView.append("Server: " + message + "\n");
+            read_textView.append("받은 메세지: " + input_message );
         }
     }
-
 }
