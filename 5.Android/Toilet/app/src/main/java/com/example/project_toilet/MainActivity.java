@@ -26,6 +26,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.sql.Time;
 
 public class MainActivity extends AppCompatActivity {
     Button send_button;
@@ -35,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private Socket client;
     private DataOutputStream dataOutput;
     private DataInputStream dataInput;
-    private String SERVER_IP = "192.168.0.3";
+    private String SERVER_IP = "10.1.4.111";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,19 +46,20 @@ public class MainActivity extends AppCompatActivity {
         send_editText = findViewById(R.id.send_editText);
         send_textView = findViewById(R.id.send_textView);
         read_textView = findViewById(R.id.read_textView);
-
+        Log.w("cnt",  "go!!");
         send_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.w("cnt",  "go!!");
                 Connect connect = new Connect();
                 connect.execute("refresh");
             }
         });
     }
 
-    private class Connect extends AsyncTask< String , Integer,Void > {
+    private class Connect extends AsyncTask< String , String,Void > {
         private String output_message;
-        private int input_message;
+        private String input_message;
 
         @Override
         protected Void doInBackground(String... strings) {
@@ -65,12 +67,9 @@ public class MainActivity extends AppCompatActivity {
                 client = new Socket(SERVER_IP, 8080);
                 dataOutput = new DataOutputStream(client.getOutputStream());
                 dataInput = new DataInputStream(client.getInputStream());
-
                 output_message = strings[0];
                 dataOutput.writeUTF(output_message);
-                input_message  = (int)dataInput.read();
-
-                Log.w("cnt","connect");
+                //Log.w("cnt","connect");
             } catch (UnknownHostException e) {
                 String str = e.getMessage().toString();
                 Log.w("discnt", str + " 1");
@@ -78,7 +77,31 @@ public class MainActivity extends AppCompatActivity {
                 String str = e.getMessage().toString();
                 Log.w("discnt", str + " 2");
             }
+            while (true){
+                try {
+                    byte[] buf = new byte[100];
+                    int read_Byte  = dataInput.read(buf);
+                    input_message = new String(buf, 0, read_Byte);
+                    if (!input_message.equals("STOP")){
+                        publishProgress(input_message);
+                    }
+                    else{
+                        break;
+                    }
+                    Thread.sleep(2);
+                } catch (IOException | InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
             return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(String... params){
+            send_textView.setText(""); // Clear the chat box
+            send_textView.append("보낸 메세지: " + output_message );
+            read_textView.setText(""); // Clear the chat box
+            read_textView.append("받은 메세지: " + params[0]);
         }
         @Override
         protected void onPostExecute(Void result) {
