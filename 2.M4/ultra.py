@@ -5,18 +5,14 @@ gpio.setmode(gpio.BCM)
 
 trig = 23 #23
 echo = 24 #24
-led_g = 17
-led_y = 27
-led_r = 22
+
 
 
 print "start"
 
 gpio.setup(trig, gpio.OUT)
 gpio.setup(echo, gpio.IN)
-gpio.setup(led_g, gpio.OUT)
-gpio.setup(led_y, gpio.OUT)
-gpio.setup(led_r, gpio.OUT)
+
 
 try :
     i = 0
@@ -46,17 +42,10 @@ try :
         print " i vlaue : ", i
 
         if dis_arr[i] > 15 :
-            gpio.output(led_r, gpio.HIGH)
-            gpio.output(led_y, gpio.LOW)
-            gpio.output(led_g, gpio.LOW)
+            print " > 15"
         if dis_arr[i] < 10 :
-            gpio.output(led_r, gpio.LOW)
-            gpio.output(led_y, gpio.HIGH)
-            gpio.output(led_g, gpio.LOW)
+            print " < 10"
         if i > 1 and dis_arr[i] < 10 and dis_arr[i-1] < 10 and dis_arr[i-2] < 10:
-            gpio.output(led_r, gpio.LOW)
-            gpio.output(led_y, gpio.LOW)
-            gpio.output(led_g, gpio.HIGH)
             print " dddddddddddddddddddddddddddddddddddddddddddddddd"
         if i == 9:
             dis_arr[2] = dis_arr[i]
