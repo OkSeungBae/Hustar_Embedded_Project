@@ -19,7 +19,7 @@ while True: #안드로이드에서 연결 버튼 누를 때까지 기다림
         in_data = client_sock.recv(1024) #안드로이드에서 "refresh" 전송
         print('rcv :', in_data.decode("utf-8"), len(in_data)) #전송 받은값 디코딩
 
-        while in_data: #2초마다 안드로이드에 값을 전달함
+        while in_data : #2초마다 안드로이드에 값을 전달함 (추후 , STOP , Connect 옵션 설정 가능)
             client_sock.send(str(out_data).encode("utf-8")) # int 값을 string 으로 인코딩해서 전송, byte 로 전송하면 복잡함
             print('send :', out_data)
             out_data = out_data+1 #전송값 +1

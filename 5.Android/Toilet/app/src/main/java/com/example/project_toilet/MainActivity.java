@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private DataOutputStream dataOutput;
     private DataInputStream dataInput;
     private static String SERVER_IP = "10.1.4.111";
-    private static String REFRESH_MSG = "refresh";
+    private static String CONNECT_MSG = "connect";
     private static String STOP_MSG = "stop";
 
     private static int BUF_SIZE = 100;
@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Connect connect = new Connect();
-                connect.execute(REFRESH_MSG);
+                connect.execute(CONNECT_MSG);
             }
         });
     }
