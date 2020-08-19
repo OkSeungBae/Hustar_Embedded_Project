@@ -36,7 +36,11 @@ public class MainActivity extends AppCompatActivity {
     private Socket client;
     private DataOutputStream dataOutput;
     private DataInputStream dataInput;
-    private String SERVER_IP = "10.1.4.111";
+    private static String SERVER_IP = "10.1.4.111";
+    private static String REFRESH_MSG = "refresh";
+    private static String STOP_MSG = "stop";
+
+    private static int BUF_SIZE = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,13 +50,13 @@ public class MainActivity extends AppCompatActivity {
         send_editText = findViewById(R.id.send_editText);
         send_textView = findViewById(R.id.send_textView);
         read_textView = findViewById(R.id.read_textView);
-        Log.w("cnt",  "go!!");
+
+
         send_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.w("cnt",  "go!!");
                 Connect connect = new Connect();
-                connect.execute("refresh");
+                connect.execute(REFRESH_MSG);
             }
         });
     }
@@ -69,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
                 dataInput = new DataInputStream(client.getInputStream());
                 output_message = strings[0];
                 dataOutput.writeUTF(output_message);
-                //Log.w("cnt","connect");
+
             } catch (UnknownHostException e) {
                 String str = e.getMessage().toString();
                 Log.w("discnt", str + " 1");
@@ -77,12 +81,13 @@ public class MainActivity extends AppCompatActivity {
                 String str = e.getMessage().toString();
                 Log.w("discnt", str + " 2");
             }
+
             while (true){
                 try {
-                    byte[] buf = new byte[100];
+                    byte[] buf = new byte[BUF_SIZE];
                     int read_Byte  = dataInput.read(buf);
                     input_message = new String(buf, 0, read_Byte);
-                    if (!input_message.equals("STOP")){
+                    if (!input_message.equals(STOP_MSG)){
                         publishProgress(input_message);
                     }
                     else{
@@ -102,13 +107,6 @@ public class MainActivity extends AppCompatActivity {
             send_textView.append("보낸 메세지: " + output_message );
             read_textView.setText(""); // Clear the chat box
             read_textView.append("받은 메세지: " + params[0]);
-        }
-        @Override
-        protected void onPostExecute(Void result) {
-            send_textView.setText(""); // Clear the chat box
-            send_textView.append("보낸 메세지: " + output_message );
-            read_textView.setText(""); // Clear the chat box
-            read_textView.append("받은 메세지: " + input_message );
         }
     }
 }
