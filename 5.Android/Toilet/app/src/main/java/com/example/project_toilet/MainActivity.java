@@ -5,6 +5,7 @@ import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -29,14 +30,16 @@ import java.net.UnknownHostException;
 import java.sql.Time;
 
 public class MainActivity extends AppCompatActivity {
-    Button send_button;
+    Button send_button, isbtn;
     EditText send_editText;
     TextView send_textView;
     TextView read_textView;
+
+
     private Socket client;
     private DataOutputStream dataOutput;
     private DataInputStream dataInput;
-    private static String SERVER_IP = "10.1.4.111";
+    private static String SERVER_IP = "10.1.4.105";
     private static String CONNECT_MSG = "connect";
     private static String STOP_MSG = "stop";
 
@@ -46,19 +49,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        send_button = findViewById(R.id.send_button);
-        send_editText = findViewById(R.id.send_editText);
-        send_textView = findViewById(R.id.send_textView);
-        read_textView = findViewById(R.id.read_textView);
 
 
-        send_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Connect connect = new Connect();
-                connect.execute(CONNECT_MSG);
-            }
-        });
+        Connect connect = new Connect();
+        connect.execute(CONNECT_MSG);
+
+
     }
 
     private class Connect extends AsyncTask< String , String,Void > {
