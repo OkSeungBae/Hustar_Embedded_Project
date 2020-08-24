@@ -113,10 +113,7 @@ public class MainActivity extends AppCompatActivity {
         });
         super.onStart();
     }
-
-
-
-
+    
     private class Connect extends AsyncTask< String , String,Void > {
         private String output_message;
         private String input_message;
@@ -124,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(String... strings) {
             try {
-                client = new Socket(SERVER_IP, 8888);
+                client = new Socket(SERVER_IP, 8080);
                 dataOutput = new DataOutputStream(client.getOutputStream());
                 dataInput = new DataInputStream(client.getInputStream());
                 output_message = strings[0];
