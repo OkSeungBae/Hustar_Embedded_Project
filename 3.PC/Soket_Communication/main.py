@@ -27,3 +27,4 @@ while True: #안드로이드에서 연결 버튼 누를 때까지 기다림
 
 client_sock.close()
 server_sock.close()
+

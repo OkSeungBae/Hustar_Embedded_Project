@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private Socket client;
     private DataOutputStream dataOutput;
     private DataInputStream dataInput;
-    private static String SERVER_IP = "10.1.4.111";
+    private static String SERVER_IP = "10.1.4.105";
     private static String CONNECT_MSG = "connect";
     private static String STOP_MSG = "stop";
 
@@ -68,12 +68,11 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(String... strings) {
             try {
-                client = new Socket(SERVER_IP, 8080);
+                client = new Socket(SERVER_IP, 8888);
                 dataOutput = new DataOutputStream(client.getOutputStream());
                 dataInput = new DataInputStream(client.getInputStream());
                 output_message = strings[0];
                 dataOutput.writeUTF(output_message);
-
             } catch (UnknownHostException e) {
                 String str = e.getMessage().toString();
                 Log.w("discnt", str + " 1");
@@ -93,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
                     else{
                         break;
                     }
-                    Thread.sleep(2);
+                    Thread.sleep(5);
                 } catch (IOException | InterruptedException e) {
                     e.printStackTrace();
                 }
