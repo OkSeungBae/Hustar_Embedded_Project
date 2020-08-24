@@ -86,19 +86,19 @@ public class MainActivity extends AppCompatActivity {
 
         totiList = new ArrayList<TotiInfo>();
         float[] testRemain = {80, 50, 20};
-        totiList.add(new TotiInfo("1층 남자화장실", 3, 0,testRemain));
-        totiList.add(new TotiInfo("1층 여자화장실", 3, 1,testRemain));
-        totiList.add(new TotiInfo("2층 남자화장실", 3, 0,testRemain));
-        totiList.add(new TotiInfo("2층 여자화장실", 3, 1,testRemain));
-        totiList.add(new TotiInfo("3층 남자화장실", 3, 0,testRemain));
-        totiList.add(new TotiInfo("3층 여자화장실", 3, 1,testRemain));
+        totiList.add(new TotiInfo("  1층 남자화장실", 3, 0,testRemain));
+        totiList.add(new TotiInfo("  1층 여자화장실", 3, 1,testRemain));
+        totiList.add(new TotiInfo("  2층 남자화장실", 3, 0,testRemain));
+        totiList.add(new TotiInfo("  2층 여자화장실", 3, 1,testRemain));
+        totiList.add(new TotiInfo("  3층 남자화장실", 3, 0,testRemain));
+        totiList.add(new TotiInfo("  3층 여자화장실", 3, 1,testRemain));
 
         totiItemAdapter = new TotiItemAdapter();
         totiItemAdapter.setItems(totiList);
 
         recyclerView.setAdapter(totiItemAdapter);
 
-        Toast.makeText(this, totiItemAdapter.getItemCount() + "개의 아이템이 있습니다", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "3D융합기술지원센터 관리자님 환영합니다.", Toast.LENGTH_SHORT).show();
 
         textViewName.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
         });
         super.onStart();
     }
-    
+
     private class Connect extends AsyncTask< String , String,Void > {
         private String output_message;
         private String input_message;
@@ -157,8 +157,14 @@ public class MainActivity extends AppCompatActivity {
         protected void onProgressUpdate(String... params){
             //Adapter에 1층 남자화장실의 데이터만 실시간으로 변경
 
+            float percent = Float.parseFloat(params[0]);
 
-            totiItemAdapter.updateItem(Float.parseFloat(params[0]));
+            if(percent <= 0)
+                percent = 0;
+            else if(percent >= 100)
+                percent = 100;
+
+            totiItemAdapter.updateItem(percent);
 
             totiItemAdapter.notifyItemChanged(0);
 

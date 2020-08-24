@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -54,7 +55,7 @@ public class TotiItemAdapter extends RecyclerView.Adapter<TotiItemAdapter.ViewHo
     {
         TextView textView_user;
         TextView remain[];
-        TextView state[];
+        ImageView state[];
         Drawable imgMan;
         Drawable imgWoman;
 
@@ -70,15 +71,16 @@ public class TotiItemAdapter extends RecyclerView.Adapter<TotiItemAdapter.ViewHo
             remain[1] = itemView.findViewById(R.id.recyc_toilet2);
             remain[2] = itemView.findViewById(R.id.recyc_toilet3);
 
-            state = new TextView[3];
+            state = new ImageView[3];
             state[0] = itemView.findViewById(R.id.state_toilet1);
             state[1] = itemView.findViewById(R.id.state_toilet2);
+            state[2] = itemView.findViewById(R.id.state_toilet3);
             state[2] = itemView.findViewById(R.id.state_toilet3);
 
             imgMan = itemView.getResources().getDrawable(R.drawable.toilet_man);
             imgWoman = itemView.getResources().getDrawable(R.drawable.toilet_woman);
-            imgMan.setBounds(0, 0, 40, 70);
-            imgWoman.setBounds(0, 0, 40, 70);
+            imgMan.setBounds(0, 0, 24, 60);
+            imgWoman.setBounds(0, 0, 24, 60);
 
         }
         public void setItem(TotiInfo item)
@@ -87,25 +89,26 @@ public class TotiItemAdapter extends RecyclerView.Adapter<TotiItemAdapter.ViewHo
             textView_user.setText(item.getName());
             if(item.getSex() == 0)
             {
-                textView_user.setCompoundDrawables(null,null,imgMan,null);
+                textView_user.setCompoundDrawables(imgMan,null,null,null);
             }
             else
             {
-                textView_user.setCompoundDrawables(null,null,imgWoman,null);
+                textView_user.setCompoundDrawables(imgWoman,null,null,null);
             }
 
             for (int i = 0; i < 3; i++) {
-                if(remainToti[i] >= 75)
+
+                if(remainToti[i] <= 10)
                 {
-                    state[i].setBackground(itemView.getResources().getDrawable(R.drawable.state_border1));
+                    state[i].setImageResource(R.drawable.state_bad);
                 }
-                else if(remainToti[i] >= 45)
+                else if(remainToti[i] <= 30)
                 {
-                    state[i].setBackground(itemView.getResources().getDrawable(R.drawable.state_border2));
+                    state[i].setImageResource(R.drawable.state_warning);
                 }
                 else
                 {
-                    state[i].setBackground(itemView.getResources().getDrawable(R.drawable.state_border3));
+                    state[i].setImageResource(R.drawable.state_good);
                 }
                 remain[i].setText(remainToti[i] + "%");
             }
