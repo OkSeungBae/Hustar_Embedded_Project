@@ -42,9 +42,9 @@ public class TotiItemAdapter extends RecyclerView.Adapter<TotiItemAdapter.ViewHo
         this.items = items;
     }
 
-    public void updateItem(int i)
+    public void updateItem(float i)
     {
-        int[] update = {i, 80, 80};
+        float[] update = {i, 80, 80};
 
         TotiInfo item = items.get(0);
         item.setRemain(update);
@@ -83,7 +83,7 @@ public class TotiItemAdapter extends RecyclerView.Adapter<TotiItemAdapter.ViewHo
         }
         public void setItem(TotiInfo item)
         {
-            int[] remainToti = item.getRemain();
+            float[] remainToti = item.getRemain();
             textView_user.setText(item.getName());
             if(item.getSex() == 0)
             {

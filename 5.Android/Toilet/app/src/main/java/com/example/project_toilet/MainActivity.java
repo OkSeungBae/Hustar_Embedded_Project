@@ -74,16 +74,18 @@ public class MainActivity extends AppCompatActivity {
 
         textViewName = findViewById(R.id.textViewName);
 
-        /*Connect connect = new Connect();
-        connect.execute(CONNECT_MSG);*/
+
 
     }
 
     @Override
     protected void onStart() {
         //recylceview에 모든 정보 담아오기
+
+
+
         totiList = new ArrayList<TotiInfo>();
-        int[] testRemain = {80, 50, 20};
+        float[] testRemain = {80, 50, 20};
         totiList.add(new TotiInfo("1층 남자화장실", 3, 0,testRemain));
         totiList.add(new TotiInfo("1층 여자화장실", 3, 1,testRemain));
         totiList.add(new TotiInfo("2층 남자화장실", 3, 0,testRemain));
@@ -102,9 +104,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 Log.d("toti", "메인 터치리스너 발생 : " + a);
-                totiItemAdapter.updateItem(a++);
 
-                totiItemAdapter.notifyItemChanged(0);
+                Connect connect = new Connect();
+                connect.execute(CONNECT_MSG);
+
                 return false;
             }
         });
@@ -158,6 +161,10 @@ public class MainActivity extends AppCompatActivity {
         protected void onProgressUpdate(String... params){
             //Adapter에 1층 남자화장실의 데이터만 실시간으로 변경
 
+
+            totiItemAdapter.updateItem(Float.parseFloat(params[0]));
+
+            totiItemAdapter.notifyItemChanged(0);
 
           /*  send_textView.setText(""); // Clear the chat box
             send_textView.append("보낸 메세지: " + output_message );
